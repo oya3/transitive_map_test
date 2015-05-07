@@ -52,18 +52,18 @@ function TransitiveOverlay(map) {
  */
 TransitiveOverlay.prototype.onAdd = function() {
   
-  var div = document.createElement('div');
-  this.div_ = div;
-  div.style.borderStyle = 'none';
-  div.style.borderWidth = '0px';
-  div.style.position = 'absolute';
+  // var div = document.createElement('div');
+  // this.div_ = div;
+  // div.style.borderStyle = 'none';
+  // div.style.borderWidth = '0px';
+  // div.style.position = 'absolute';
 
-  var img = document.createElement('img');
-  img.src = 'https://developers.google.com/maps/documentation/javascript/images/control-positions.png';
-  img.style.width = '100%';
-  img.style.height = '100%';
-  img.style.position = 'absolute';
-  div.appendChild(img);
+  // var img = document.createElement('img');
+  // img.src = 'https://developers.google.com/maps/documentation/javascript/images/control-positions.png';
+  // img.style.width = '100%';
+  // img.style.height = '100%';
+  // img.style.position = 'absolute';
+  // div.appendChild(img);
 
   
   var transitive_div = document.createElement('div');
@@ -71,13 +71,13 @@ TransitiveOverlay.prototype.onAdd = function() {
   transitive_div.style.position = 'absolute';
   transitive_div.style.top = '0';
   transitive_div.style.left = '0';
-  transitive_div.style.height = '100%';
-  transitive_div.style.width = '100%';
-  div.appendChild(transitive_div);
+  transitive_div.style.height = '400px';
+  transitive_div.style.width = '400px';
+  //div.appendChild(transitive_div);
 
-  var d3 = require('d3');
+  // var d3 = require('d3');
   var Transitive = require('transitive');
-  var OtpProfiler = require('otp-profiler');
+  // var OtpProfiler = require('otp-profiler');
   
   this.transitive = new Transitive({
     el: transitive_div,
@@ -86,21 +86,35 @@ TransitiveOverlay.prototype.onAdd = function() {
     data: DATA,
     styles: STYLES,
     drawGrid: false,
-    gridCellSize: 300,
-    initialBounds: [
-      [-77.093507, 38.858710],
-      [-76.947266, 38.921104]
-    ],
+    gridCellSize: 500, // http://nm.zaq1.net/?p=130
+    // initialBounds: [
+    //   [-100, 100],
+    //   [-120, 120]
+    // ],
     // displayMargins: {
     //   right: 400,
     //   bottom: 50
     // },
-    draggableTypes: ['PLACE']
+    // draggableTypes: ['PLACE']
+    // autoResize: true,
   });
 
+  // var pos = this.map_.getBounds();
+  // var north = pos.getNorthEast().lat(); // 北
+  // var east  = pos.getNorthEast().lng(); // 東
+  // var south = pos.getSouthWest().lat(); // 南
+  // var west = pos.getSouthWest().lng(); // 西
+  // this.transitive.setDisplayBounds( [[west, south],[east, north]]);
+  // var z = map.getZoom();
+  // document.getElementById("map-pos2").innerHTML = "北"+latNE+"、東"+lngNE+"、南"+latSW+"、西"+lngSW+"、ズーム"+z;
+  // .setDisplayBounds(llBounds)
+  // Sets the lon/lat bounding box for the display, expressed as [ [west, south], [east, north] ]
+  
+
+  
   // Add the element to the "overlayLayer" pane.
   var panes = this.getPanes();
-  panes.overlayLayer.appendChild(div);
+  panes.overlayLayer.appendChild(transitive_div);
 };
 
 TransitiveOverlay.prototype.draw = function() {
@@ -118,11 +132,11 @@ TransitiveOverlay.prototype.draw = function() {
 //  var ne = overlayProjection.fromLatLngToDivPixel(this.div_.getNorthEast());
 
   // Resize the image's div to fit the indicated dimensions.
-  var div = this.div_;
-  div.style.left = '0px';
-  div.style.top = '0px';
-  div.style.width = '300px';
-  div.style.height = '300px';
+//  var div = this.div_;
+//  div.style.left = '0px';
+//  div.style.top = '0px';
+//  div.style.width = '300px';
+//  div.style.height = '300px';
 };
 
 // The onRemove() method will be called automatically from the API if
