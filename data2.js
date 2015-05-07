@@ -18,15 +18,11 @@ var DATA = {
     "stop_name": "222stop_name_222",
     "stop_lat": 38.926552,
     "stop_lon": -76.925104
-//    "stop_lat": 38.889571,
-//    "stop_lon": -76.913313
   }, {
     "stop_id": "333",
     "stop_name": "333stop_name_333",
     "stop_lat": 38.936552,
     "stop_lon": -76.935104
-//    "stop_lat": 38.933994,
-//    "stop_lon": -76.890005
   }],
   
   "patterns": [{

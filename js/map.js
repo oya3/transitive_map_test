@@ -68,7 +68,7 @@ TransitiveOverlay.prototype.onAdd = function() {
   
   var transitive_div = document.createElement('div');
   // transitive_div.style.backgroundColor  = 'transparent';
-  transitive_div.style.position = 'absolute';
+  // transitive_div.style.position = 'absolute';
   transitive_div.style.top = '0';
   transitive_div.style.left = '0';
   transitive_div.style.height = '400px';
@@ -86,7 +86,8 @@ TransitiveOverlay.prototype.onAdd = function() {
     data: DATA,
     styles: STYLES,
     drawGrid: false,
-    gridCellSize: 500, // http://nm.zaq1.net/?p=130
+    gridCellSize: 100, // http://nm.zaq1.net/?p=130
+    useDynamicRendering: true,
     // initialBounds: [
     //   [-100, 100],
     //   [-120, 120]
@@ -149,20 +150,82 @@ TransitiveOverlay.prototype.onRemove = function() {
 
 
 var map;
-var chicago = new google.maps.LatLng(62.323907, -150.109291);
+var center = new google.maps.LatLng(35.00904999253169, 135.91976173437504);
 
 function initialize() {
+
+ // Create an array of styles.
+  var styles = [
+    {
+      stylers: [
+        { hue: "#00ffe6" },
+        { saturation: -20 }
+      ]
+    },{
+      featureType: "road",
+      elementType: "geometry",
+      stylers: [
+        { lightness: 100 },
+        { visibility: "simplified" }
+      ]
+    },{
+      featureType: "road",
+      elementType: "labels",
+      stylers: [
+        { visibility: "off" }
+      ]
+    }
+  ];
+
+  // Create a new StyledMapType object, passing it the array of styles,
+  // as well as the name to be displayed on the map type control.
+  var styledMap = new google.maps.StyledMapType(styles, {name: "Styled Map"});
+  
   var mapOptions = {
-    zoom: 10,
-    center: chicago
+    zoom: 12,
+    center: center,
+    zoomControl: true,
+    zoomControlOptions: {
+        style: google.maps.ZoomControlStyle.LARGE,
+        position: google.maps.ControlPosition.LEFT_TOP
+    },
+    mapTypeControlOptions: {
+      mapTypeIds: [google.maps.MapTypeId.ROADMAP, 'map_style']
+    },
   };
-  map = new google.maps.Map(document.getElementById('map-canvas'),
-                            mapOptions);
+  var map_canvas = document.getElementById('map-canvas');
+  map_canvas.style.width = '400px';
+  map_canvas.style.height = '400px';
+
+  // map = new google.maps.Map(document.getElementById('map-canvas'),
+  //                           mapOptions);
+  map = new google.maps.Map(map_canvas, mapOptions);
+
+  map.mapTypes.set('map_style', styledMap);
+  map.setMapTypeId('map_style');
+  
   // Insert this overlay map type as the first overlay map type at
   // position 0. Note that all overlay map types appear on top of
   // their parent base map.
   map.overlayMapTypes.insertAt(0, new CoordMapType(new google.maps.Size(256, 256)));
 
+  var subwayMapType = new google.maps.ImageMapType({
+    name: "地下鉄", alt: "地下鉄を見る",
+        tileSize: new google.maps.Size(256,256),
+    isPng: true,
+    maxZoom: 22,
+    minZoom: 10,
+    getTileUrl: function(coord, zoom) {
+      var mt = ((coord.y & 0x1 == 0)? 0 : 2) | (coord.x & 0x1);
+      var url = "http://mt%m.google.com/mapslt?lyrs=transit&x=%x&y=%y&z=%z&w=256&h=256&style=2"
+        .replace("%m", mt)
+        .replace("%x", coord.x).replace("%y", coord.y)
+        .replace("%z", zoom);
+      return url;
+    }
+  });
+  map.overlayMapTypes.insertAt(1, subwayMapType); // オーバーレイ表示するときの例
+  
   // var swBound = new google.maps.LatLng(62.281819, -150.287132);
   // var neBound = new google.maps.LatLng(62.400471, -150.005608);
   // var bounds = new google.maps.LatLngBounds(swBound, neBound);
