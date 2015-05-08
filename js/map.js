@@ -225,6 +225,9 @@ function initialize() {
     }
   });
   map.overlayMapTypes.insertAt(1, subwayMapType); // オーバーレイ表示するときの例
+
+  ferroLayer = new google.maps.FusionTablesLayer({query: {from: '186Nsf4x8WFwX8o7harkF6B7ROwKtOGwbZ3ktsMqZ'}});
+  ferroLayer.setMap(map);
   
   // var swBound = new google.maps.LatLng(62.281819, -150.287132);
   // var neBound = new google.maps.LatLng(62.400471, -150.005608);
